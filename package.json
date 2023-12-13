@@ -1,6 +1,6 @@
 {
   "name": "@marijoo/react-terminal",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "React component that renders a terminal",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -54,9 +54,7 @@
     "sass": "^1.58.0",
     "source-map-loader": "^0.2.4",
     "ts-loader": "^9.4.2",
-    "typescript": "^5.2.2",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "prop-types": "^15.7.2",
@@ -67,5 +65,8 @@
     "autoprefixer": "^10.4.0",
     "prop-types": "^15.7.2",
     "react-device-detect": "^2.2.3"
+  },
+  "overrides": {
+    "rollup@^2.0.0": "^4.3.0"
   }
 }
