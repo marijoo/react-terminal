@@ -1,6 +1,7 @@
 .editor {
   text-align: left;
   height: 100%;
+  padding: 10px 15px;
   overflow-wrap: break-word;
   overflow-y: scroll;
   outline: none;
@@ -54,4 +55,13 @@
     color: inherit;
     text-decoration: underline;
   }
+}
+
+.editorWithTopBar {
+  height: calc(100% - 46px);
+}
+
+.curvedTop {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }

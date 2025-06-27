@@ -1,8 +1,7 @@
-import typescript from "rollup-plugin-typescript2";
 import postcss from "rollup-plugin-postcss";
-import { terser } from "rollup-plugin-terser";
-import pkg from "./package.json" assert {type: "json"};
-import typescriptModule from "typescript";
+import terser from "@rollup/plugin-terser";
+import typescript from "@rollup/plugin-typescript";
+import pkg from "./package.json" with { type: "json" };
 
 export default {
   input: "src/index.tsx",
@@ -28,9 +27,7 @@ export default {
       modules: true,
       use: ["sass"],
     }),
-    typescript({
-      typescript: typescriptModule
-    }),
-    process.env.NODE_ENV === "production" ? terser() : null,
-  ],
+    typescript(),
+    process.env.NODE_ENV === "production" ? terser() : null
+  ]
 };

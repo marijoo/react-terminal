@@ -1,2 +1,4 @@
-@import "./styles/editor.scss";
-@import "./styles/terminal.scss";
+@use "./styles/variables.scss";
+@use "./styles/controls.scss";
+@use "./styles/editor.scss";
+@use "./styles/terminal.scss";

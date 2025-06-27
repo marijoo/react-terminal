@@ -1,83 +1,75 @@
 import * as React from "react";
-import PropTypes from "prop-types";
-import { isMobile } from "react-device-detect";
-
+import Utils from "../common/Utils";
 import { StyleContext } from "../contexts/StyleContext";
 import { ThemeContext } from "../contexts/ThemeContext";
 import { useClickOutsideEvent } from "../hooks/terminal";
-
+import Controls from "./Controls";
 import Editor from "./Editor";
 
-export default function Terminal(props: any) {
+interface TerminalProps {
+  enableInput: boolean
+  caret: boolean
+  theme: string
+  showControlBar: boolean
+  showControlButtons: boolean
+  controlButtonLabels: string[]
+  prompt: string
+  commands: Record<string, (...args: never) => void>
+  welcomeMessage: string | (() => void) | React.ReactNode
+  errorMessage: string | ((...args: never) => void) | React.ReactNode
+  defaultHandler: ((...args: never) => void) | null
+};
+
+const Terminal: React.FC<TerminalProps> = ({
+  enableInput = true,
+  caret = true,
+  theme = "light",
+  showControlBar = true,
+  showControlButtons = true,
+  controlButtonLabels = ["close", "minimize", "maximize"],
+  prompt = ">>>",
+  commands = {},
+  welcomeMessage = "",
+  errorMessage = "not found!",
+  defaultHandler = null,
+}) => {
   const wrapperRef = React.useRef(null);
-  const [consoleFocused, setConsoleFocused] = React.useState(!isMobile);
+  const [consoleFocused, setConsoleFocused] = React.useState(!Utils.isMobile());
   const style = React.useContext(StyleContext);
   const themeStyles = React.useContext(ThemeContext);
 
   useClickOutsideEvent(wrapperRef, consoleFocused, setConsoleFocused);
 
-  const {
-    caret,
-    theme,
-    prompt,
-    commands,
-    welcomeMessage,
-    errorMessage,
-    enableInput,
-  } = props;
+  const controls = showControlBar ? <Controls
+    consoleFocused={consoleFocused}
+    showControlButtons={showControlButtons}
+    controlButtonLabels={controlButtonLabels}/> : null;
 
-  const editor = (
-    <Editor
-      caret={caret}
-      consoleFocused={consoleFocused}
-      prompt={prompt}
-      commands={commands}
-      welcomeMessage={welcomeMessage}
-      errorMessage={errorMessage}
-      enableInput={enableInput}
-    />
-  );
+  const editor = <Editor
+    caret={caret}
+    consoleFocused={consoleFocused}
+    prompt={prompt}
+    commands={commands}
+    welcomeMessage={welcomeMessage}
+    errorMessage={errorMessage}
+    enableInput={enableInput}
+    showControlBar={showControlBar}
+    defaultHandler={defaultHandler}
+  />
 
   return (
     <div
       ref={wrapperRef}
       id={style.terminalContainer}
       className={style[`theme--${theme}`]}
+      data-testid="terminal"
     >
-      <div
-        className={`${style.terminal}`}
-        style={{
-          color: themeStyles.color,
-        }}
-      >
+      <div className={`${style.terminal}`} style={{ background: themeStyles.themeToolbarColor, color: themeStyles.themeColor }}>
+        {controls}
         {editor}
       </div>
     </div>
   );
 }
 
-Terminal.propTypes = {
-  enableInput: PropTypes.bool,
-  caret: PropTypes.bool,
-  theme: PropTypes.string,
-  prompt: PropTypes.string,
-  commands: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.node]),
-  ),
-  welcomeMessage: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.func,
-    PropTypes.node,
-  ]),
-  errorMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-};
-
-Terminal.defaultProps = {
-  enableInput: true,
-  caret: true,
-  theme: "light",
-  prompt: "~$",
-  commands: {},
-  welcomeMessage: "",
-  errorMessage: "Command not found.",
-};
+export default Terminal;
